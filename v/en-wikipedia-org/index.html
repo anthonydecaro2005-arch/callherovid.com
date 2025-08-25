@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Call Hero - Guaranteed 100% Answer Rate For Plumbers</title>
+  <link rel="icon" type="image/png" href="/BASE Favicon.png" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #002b5c;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+    #logo {
+      max-width: 280px;
+      height: auto;
+      margin-bottom: 15px;
+    }
+    h1 {
+      margin: 0px 20px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    #video-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 30px auto
+    }
+    #video-container {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+    }
+    video {
+      width: 100%;
+      border: 3px solid black;
+      box-sizing: border-box;
+    }
+    #unmute-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(128, 128, 128, 0.7);
+      color: white;
+      padding: 22px 22px;
+      border-radius: 100px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+    #cta-button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 10px 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+      margin-top: 0px;
+      opacity: 0;
+      transition: opacity 1s ease-in;
+    }
+    #cta-subtext {
+      display: none;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #ffffff;
+      opacity: 0;
+      transition: opacity 1s ease-in;
+    }
+    #calendly {
+      display: none;
+      justify-content: center;
+      margin-top: 10px;
+      max-width: 60%;
+      margin: 0 auto;
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    /* Mobile overrides */
+    @media (max-width: 768px) {
+      #logo { margin-top: 15px; margin-bottom: 15px; }
+      h1 { margin-top: 0px; margin-bottom: 15px; }
+      #video-wrapper { margin-top: 15px; margin-bottom: 15px; }
+      #video-container { max-width: 100%; width: 100%; }
+      video { width: 100%; border-width: 2px; margin-top: 10px; margin-bottom: 0px; }
+      #cta-button { margin-top: 10px; margin-bottom: 0px; }
+      #cta-subtext { margin-top: 10px; margin-bottom: 30px; }
+      #calendly { max-width: 100%; width: 100%; margin-top: 20px; margin-bottom: 40px; }
+      iframe { width: 100%; height: 550px; margin-top: 10px; margin-bottom: 10px; }
+    }
+  </style>
+
+  <!-- Fast-load the video bytes ASAP -->
+  <link rel="preload" as="video" href="./video.mp4" type="video/mp4">
+</head>
+<body>
+  <!-- No Calendly preload -->
+
+  <header>
+    <img id="logo" src="/BASE Logo.png" alt="Call Hero Logo"/>
+    <h1>You’re Losing $80K/Year to Missed Calls — Here’s the Fix:</h1>
+  </header>
+
+  <div id="video-wrapper">
+    <div id="video-container">
+      <video id="hero-video" muted playsinline webkit-playsinline preload="auto" autoplay controls>
+        <source src="./video.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div id="unmute-overlay">🔊 Tap to Unmute</div>
+    </div>
+  </div>
+
+  <button id="cta-button">Start My Free Trial Call</button>
+  <p id="cta-subtext">No Card. No Setup Time. No Missed Calls.</p>
+
+  <div id="calendly"></div>
+
+  <script>
+    const CTA_REVEAL_MS = 10000;
+    const video = document.getElementById('hero-video');
+    const overlay = document.getElementById('unmute-overlay');
+    const cta = document.getElementById('cta-button');
+    const subtext = document.getElementById('cta-subtext');
+    const calendly = document.getElementById('calendly');
+
+    video.addEventListener('canplay', () => {
+      overlay.style.display = 'block';
+      try { video.play(); } catch (_) {}
+    }, { once: true });
+
+    video.addEventListener('play', () => {
+      if (video.muted) overlay.style.display = 'block';
+    }, { once: true });
+
+    video.addEventListener('volumechange', () => {
+      if (!video.muted) overlay.style.display = 'none';
+    });
+
+    const startWithSound = async () => {
+      try {
+        video.pause();
+        video.currentTime = 0;
+        video.muted = false;
+        await video.play();
+      } catch (err) {
+        console.error('Playback failed:', err);
+      }
+    };
+
+    overlay.addEventListener('pointerdown', startWithSound, { once: true });
+    overlay.addEventListener('click', startWithSound, { once: true });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        cta.style.display = 'inline-block';
+        subtext.style.display = 'block';
+        requestAnimationFrame(() => {
+          cta.style.opacity = 1;
+          subtext.style.opacity = 1;
+        });
+      }, CTA_REVEAL_MS);
+    });
+
+    cta.addEventListener('click', () => {
+      if (!calendly.querySelector('iframe')) {
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://calendly.com/anthonydecaro2005/30min';
+        iframe.id = 'calendlyEmbed';
+        iframe.title = 'Schedule a call';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowtransparency', 'true');
+        iframe.style.display = 'block';
+        calendly.appendChild(iframe);
+      }
+      calendly.style.display = 'block';
+      calendly.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      try { window.scrollBy({ top: 280, behavior: 'smooth' }); } catch (_) {}
+
+      cta.disabled = true;
+      cta.style.cursor = 'not-allowed';
+    });
+  </script>
+</body>
+</html>
+
